@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "LlamaRama",
-    "slug": "LlamaRama",
+    "slug": "llamarama",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +37,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f4b067ee-36d1-442c-8cad-d4837b96afd0"
+      }
+    },
+    "owner": "qshaner"
   }
 }
