@@ -7,16 +7,26 @@ export function CounterView(){
 
 const [counterCount, setCounterCount] = useState<number | null>(null);
 
-useEffect(()=> {
-    //fetch from backend
+const getCountFromApi = async () => {
 
-    setCounterCount(0);
+    try {
+        const response = await fetch('http://192.168.86.249:5000/')
+        const json = await response.json();
+        setCounterCount(json.counter)
+    }
+    catch (error) {
+        console.error(error)
+    }
+}
+
+useEffect(()=> {
+    getCountFromApi();
 }, [])
 
     return (
         <View>
             {<Text>Counter Count: {counterCount}</Text>}
-            <ActionButton action={()=>setCounterCount(prev => (prev ?? 0)+1)}/>
+            <ActionButton action={()=> getCountFromApi()}/>
         </View>
     )
 }
