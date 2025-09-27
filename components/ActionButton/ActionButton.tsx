@@ -1,12 +1,16 @@
-import { Alert, Button } from "react-native";
+import { Button } from "react-native";
 
-export function ActionButton() {
+type ActionButtonProps = {
+    action: () => void;
+}
+
+export function ActionButton({action}: ActionButtonProps) {
     
     return (
-<Button 
-title="click"
-color="#f194ff"
-onPress={()=> Alert.alert("Button with color pressed")}
+        <Button 
+            title="click"
+            color="#f194ff"
+            onPress={action}
 />
     )
 }
