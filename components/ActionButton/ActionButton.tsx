@@ -5,12 +5,11 @@ type ActionButtonProps = {
 }
 
 export function ActionButton({action}: ActionButtonProps) {
-    
-    return (
-        <Button 
-            title="click"
-            color="#f194ff"
-            onPress={action}
-/>
-    )
+  return (
+    <Button
+      title="click"
+      color="#f194ff"
+      onPress={action}
+    />
+  )
 }
