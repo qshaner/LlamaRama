@@ -5,8 +5,8 @@ import { Text, TextInput, View } from 'react-native';
 export function LoginView(){
   //get the session ID from backend, store in local state.
 
-  //const [sessionId, setSessionId] = useState<number | null>(null);
-  const [sessionId, setSessionId] = useState(null);
+  const [sessionId, setSessionId] = useState<number | null>(null);
+  const [username, setUsername] = useState<string>("");
 
   const Login = async () => {
     try {
@@ -16,7 +16,7 @@ export function LoginView(){
           "Accept": "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({username: "robkinyon"}),
+        body: JSON.stringify({username: username}),
       })
       const json = await response.json();
       setSessionId(json.session_id)
@@ -26,16 +26,16 @@ export function LoginView(){
     }
   }
 
-  /*
-  useEffect(()=> {
-    getCountFromApi();
-  }, [])
-  */
-
   return (
     <View>
-      {<Text>Session ID: {sessionId}</Text>}
+      <Text>Username</Text>
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: '80%', paddingHorizontal: 10 }}
+        onChangeText={text => setUsername(text)}
+        value={username}
+      />
       <ActionButton action={()=> Login()}/>
+      {<Text>Session ID: {sessionId}</Text>}
     </View>
   )
 }
