@@ -3,10 +3,61 @@ import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
 export function LoginView(){
-  //get the session ID from backend, store in local state.
-
+  // Somehow, the session_id needs to be accessible from CounterView
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
+  const [counterCount, setCounterCount] = useState<number | null>(null);
+
+  const getCountFromApi = async () => {
+    try {
+      const response = await fetch('http://192.168.86.145:5000/', {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-Session-Id": sessionId,
+        },
+      })
+      if (response.status == 200) {
+        const json = await response.json();
+        await setCounterCount(json.counter);
+      } else if (response.status == 400) {
+        // Handle bad request
+      } else if (response.status == 403) {
+        // Handle "not logged in"
+      } else {
+        // Handle unexpected error
+      }
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+  const incrementAndGetCountFromApi = async () => {
+    try {
+      const response = await fetch('http://192.168.86.145:5000/', {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-Session-Id": sessionId,
+        },
+      })
+      if (response.status == 200) {
+        const json = await response.json();
+        setCounterCount(json.counter);
+      } else if (response.status == 400) {
+        // Handle bad request
+      } else if (response.status == 403) {
+        // Handle "not logged in"
+      } else {
+        // Handle unexpected error
+      }
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
 
   const Login = async () => {
     try {
@@ -20,39 +71,11 @@ export function LoginView(){
       })
       if (response.status == 200) {
         const json = await response.json();
-        setSessionId(json.session_id)
+        setSessionId(json.session_id);
       } else if (response.status == 400) {
         // Handle bad request
       } else if (response.status == 401) {
         // Handle "username not provided"
-      } else {
-        // Handle unexpected error
-      }
-    }
-    catch (error) {
-      console.error(error)
-    }
-  }
-
-  // Somehow, the session_id needs to be accessible from CounterView
-  const [counterCount, setCounterCount] = useState<number | null>(null);
-  const getCountFromApi = async () => {
-    try {
-      const response = await fetch('http://192.168.86.145:5000/', {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({session_id: sessionId}),
-      })
-      if (response.status == 200) {
-        const json = await response.json();
-        setSessionId(json.session_id)
-      } else if (response.status == 400) {
-        // Handle bad request
-      } else if (response.status == 403) {
-        // Handle "not logged in"
       } else {
         // Handle unexpected error
       }
@@ -73,7 +96,7 @@ export function LoginView(){
       <ActionButton action={()=> Login()}/>
       {<Text>Session ID: {sessionId}</Text>}
       {<Text>Counter Count: {counterCount}</Text>}
-      <ActionButton action={()=> getCountFromApi()}/>
+      <ActionButton action={()=> incrementAndGetCountFromApi()}/>
     </View>
   )
 }
