@@ -5,7 +5,7 @@ import { Text, TextInput, View } from 'react-native';
 export function LoginView(){
   //get the session ID from backend, store in local state.
 
-  const [sessionId, setSessionId] = useState<number | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
 
   const Login = async () => {
@@ -18,8 +18,44 @@ export function LoginView(){
         },
         body: JSON.stringify({username: username}),
       })
-      const json = await response.json();
-      setSessionId(json.session_id)
+      if (response.status == 200) {
+        const json = await response.json();
+        setSessionId(json.session_id)
+      } else if (response.status == 400) {
+        // Handle bad request
+      } else if (response.status == 401) {
+        // Handle "username not provided"
+      } else {
+        // Handle unexpected error
+      }
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
+  // Somehow, the session_id needs to be accessible from CounterView
+  const [counterCount, setCounterCount] = useState<number | null>(null);
+  const getCountFromApi = async () => {
+    try {
+      const response = await fetch('http://192.168.86.145:5000/', {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({session_id: sessionId}),
+      })
+      if (response.status == 200) {
+        const json = await response.json();
+        setSessionId(json.session_id)
+      } else if (response.status == 400) {
+        // Handle bad request
+      } else if (response.status == 403) {
+        // Handle "not logged in"
+      } else {
+        // Handle unexpected error
+      }
     }
     catch (error) {
       console.error(error)
@@ -36,6 +72,8 @@ export function LoginView(){
       />
       <ActionButton action={()=> Login()}/>
       {<Text>Session ID: {sessionId}</Text>}
+      {<Text>Counter Count: {counterCount}</Text>}
+      <ActionButton action={()=> getCountFromApi()}/>
     </View>
   )
 }
