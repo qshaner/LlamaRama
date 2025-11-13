@@ -1,23 +1,22 @@
+import { CounterView } from "@/views/CounterView";
 import { LoginView } from "@/views/LoginView";
-import { Button, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 export default function Index() {
+  
+
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <LoginView />
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={LoginView} />
+      <Tab.Screen name="Profile" component={CounterView} />
+    </Tab.Navigator>
   );
-  /*
-      <Text>Login Screen</Text>
-      <Link href="/counter" asChild>
-        <Button title="Go to counter" />
-      </Link>
-  */
+}
+  
+  return (
+    <MyTabs />
+  );
 }
